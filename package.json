@@ -1,0 +1,32 @@
+{
+  "name": "sneaky-bot",
+  "version": "1.0.0",
+  "description": "A discord music bot.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bangjdev/sneaky-bot.git"
+  },
+  "keywords": [
+    "music",
+    "discord",
+    "bot"
+  ],
+  "author": "Bang NGUYEN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bangjdev/sneaky-bot/issues"
+  },
+  "homepage": "https://github.com/bangjdev/sneaky-bot#readme",
+  "dependencies": {
+    "discord.js": "^13.1.0",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  }
+}
