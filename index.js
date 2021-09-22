@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const { Client, Intents } = require("discord.js");
+const { search } = require('./command/search');
 
 dotenv.config();
 
@@ -41,7 +42,7 @@ client.on('interactionCreate', async (interaction) => {
     case "add":
       const firstNumber = options.getNumber("number1") || 0;
       const secondNumber = options.getNumber("number2") || 0;
-      const res = firstNumber + secondNumber;
+      res = firstNumber + secondNumber;
 
       interaction.reply({
         content: res.toString(),
@@ -49,6 +50,25 @@ client.on('interactionCreate', async (interaction) => {
       });
 
       break;
+    case "search":
+      const songName = options.getString("song") || "";
+      const limit = options.getNumber("limit") || 5;
+
+      interaction.deferReply({
+        ephemeral: true
+      });
+
+      res = await search(songName, limit);
+
+      response = `Here are ${limit} results:`;
+
+      for (let i = 0; i < res.length; i ++) {
+        response += `\n${i}. ${res[i].title} - (${res[i].timestamp})`;
+      }
+
+      interaction.editReply({
+        content: response
+      });
     default:
       break;
   }

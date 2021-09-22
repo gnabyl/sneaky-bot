@@ -21,5 +21,23 @@ exports.commandsList = [
                 "type": Constants.ApplicationCommandOptionTypes.NUMBER
             }
         ]
+    },
+    {
+        "name": "search",
+        "description": "Search song by name",
+        "options": [
+            {
+                "name": "song",
+                "description": "Name of the song",
+                "required": true,
+                "type": Constants.ApplicationCommandOptionTypes.STRING
+            },
+            {
+                "name": "limit",
+                "description": "How many results do you want?",
+                "required": false,
+                "type": Constants.ApplicationCommandOptionTypes.NUMBER
+            }
+        ]
     }
-]
+];
