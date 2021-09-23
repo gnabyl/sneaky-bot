@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const { Client, Intents } = require("discord.js");
+const { Client, Intents, MessageButton, MessageActionRow } = require("discord.js");
 const { search } = require('./command/search');
 
 dotenv.config();
@@ -62,12 +62,22 @@ client.on('interactionCreate', async (interaction) => {
 
       response = `Here are ${limit} results:`;
 
+			const buttonsRow = new MessageActionRow();
+
       for (let i = 0; i < res.length; i ++) {
-        response += `\n${i}. ${res[i].title} - (${res[i].timestamp})`;
+        response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${res[i].timestamp})`;
+				buttonsRow.addComponents(
+					new MessageButton()
+						.setCustomId(i.toString())
+						.setLabel(i.toString())
+						.setStyle("PRIMARY")
+				);
       }
 
+
       interaction.editReply({
-        content: response
+        content: response,
+				components: [buttonsRow]
       });
     default:
       break;
