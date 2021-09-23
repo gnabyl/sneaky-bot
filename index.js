@@ -6,6 +6,7 @@ const { executeSearch } = require('./command/search');
 const { SEARCH_COMMAND, PLAY_COMMAND } = require('./utils/constants');
 const LastCommand = require("./utils/last-command");
 const SongQueue = require('./utils/song-queue');
+const { joinVoiceChannel } = require('@discordjs/voice');
 
 // Configuration
 dotenv.config();
@@ -76,7 +77,15 @@ const handleCommand = async (interaction) => {
 				interaction.reply("You must be in a voice channel to play music!");
 				break;
 			} else {
-				// join the channel
+				try {
+					joinVoiceChannel({
+						channelId: voiceChannel.id,
+						guildId: guild.id,
+						adapterCreator: guild.voiceAdapterCreator
+					});
+				} catch (err) {
+					interaction.reply("I can't join with you!");
+				}
 			}
 		default:
 			break;
