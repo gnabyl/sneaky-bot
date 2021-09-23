@@ -89,7 +89,7 @@ const handleButton = async (interaction) => {
     switch (command) {
 		case SEARCH_COMMAND:
 			const songIndex = parseInt(interaction.customId);
-			serverQueue.push(results[songIndex]);
+			serverQueue.push(guildId, results[songIndex]);
 			interaction.editReply({
 				content: `Track **${results[songIndex].title}** added to the queue!`,
 			});
