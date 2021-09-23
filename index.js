@@ -3,7 +3,7 @@
 const dotenv = require('dotenv');
 const { Client, Intents } = require("discord.js");
 const { executeSearch } = require('./command/search');
-const { SEARCH_COMMAND } = require('./utils/constants');
+const { SEARCH_COMMAND, PLAY_COMMAND } = require('./utils/constants');
 const LastCommand = require("./utils/last-command");
 const SongQueue = require('./utils/song-queue');
 
@@ -48,6 +48,7 @@ const handleCommand = async (interaction) => {
 	const { commandName, options } = interaction;
 
 	switch (commandName) {
+		// Normal command
 		case "ping":
 			interaction.reply({
 				content: "PONG!",
@@ -65,11 +66,29 @@ const handleCommand = async (interaction) => {
 			});
 
 			break;
+		// All the music commands
+		case SEARCH_COMMAND:
+		case PLAY_COMMAND:
+			const guild = client.guilds.cache.get(interaction.guildId);
+			const member = guild.members.cache.get(interaction.member.user.id);
+			const voiceChannel = member.voice.channel;
+			if (!voiceChannel) {
+				interaction.reply("You must be in a voice channel to play music!");
+				break;
+			} else {
+				// join the channel
+			}
+		default:
+			break;
+	}
+
+	switch (commandName) {
 		case SEARCH_COMMAND:
 			lastCommand.set(interaction.guildId, interaction.userId, {
 				command: SEARCH_COMMAND,
 				results: await executeSearch(interaction)
 			});
+			break;
 		default:
 			break;
 	}
