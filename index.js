@@ -13,73 +13,73 @@ const queue = new Map();
 
 // When the client is ready, run this code (only once)
 client.once("ready", async () => {
-  console.log("Ready!");
+	console.log("Ready!");
 });
 
 client.once("reconnecting", () => {
-  console.log("Reconnecting!");
+	console.log("Reconnecting!");
 });
 client.once("disconnect", () => {
-  console.log("Disconnect!");
+	console.log("Disconnect!");
 });
 
 // Login to Discord with your client's token
 client.login(token);
 
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) {
-    return;
-  }
-  const { commandName, options } = interaction;
+	if (!interaction.isCommand()) {
+		return;
+	}
+	const { commandName, options } = interaction;
 
-  switch (commandName) {
-    case "ping":
-      interaction.reply({
-        content: "PONG!",
-        ephemeral: true
-      });
-      break;
-    case "add":
-      const firstNumber = options.getNumber("number1") || 0;
-      const secondNumber = options.getNumber("number2") || 0;
-      res = firstNumber + secondNumber;
+	switch (commandName) {
+		case "ping":
+			interaction.reply({
+				content: "PONG!",
+				ephemeral: true
+			});
+			break;
+		case "add":
+			const firstNumber = options.getNumber("number1") || 0;
+			const secondNumber = options.getNumber("number2") || 0;
+			res = firstNumber + secondNumber;
 
-      interaction.reply({
-        content: res.toString(),
-        ephemeral: true
-      });
+			interaction.reply({
+				content: res.toString(),
+				ephemeral: true
+			});
 
-      break;
-    case "search":
-      const songName = options.getString("song") || "";
-      const limit = options.getNumber("limit") || 5;
+			break;
+		case "search":
+			const songName = options.getString("song") || "";
+			const limit = options.getNumber("limit") || 5;
 
-      interaction.deferReply({
-        ephemeral: true
-      });
+			interaction.deferReply({
+				ephemeral: true
+			});
 
-      res = await search(songName, limit);
+			res = await search(songName, limit);
 
-      response = `Here are ${limit} results:`;
+			response = `Here are ${limit} results:`;
 
 			const buttonsRow = new MessageActionRow();
 
-      for (let i = 0; i < res.length; i ++) {
-        response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${res[i].timestamp})`;
+			for (let i = 0; i < res.length; i ++) {
+				response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${res[i].timestamp})`;
 				buttonsRow.addComponents(
 					new MessageButton()
 						.setCustomId(i.toString())
 						.setLabel(i.toString())
 						.setStyle("PRIMARY")
 				);
-      }
+			}
 
 
-      interaction.editReply({
-        content: response,
+			interaction.editReply({
+				content: response,
 				components: [buttonsRow]
-      });
-    default:
-      break;
-  }
+			});
+		default:
+			break;
+	}
 });

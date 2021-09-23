@@ -9,34 +9,34 @@ const token = process.env.TOKEN;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 
 client.once("ready", async () => {
-  console.log("Initializing commands handler...");
+	console.log("Initializing commands handler...");
 
-  const guildId = process.env.GUILD_ID;
-  const guild = client.guilds.cache.get(guildId);
+	const guildId = process.env.GUILD_ID;
+	const guild = client.guilds.cache.get(guildId);
 
-  let commands;
+	let commands;
 
-  if (guild) {
-    commands = guild.commands;
-  } else {
-    commands = client.application.commands;
-  }
+	if (guild) {
+		commands = guild.commands;
+	} else {
+		commands = client.application.commands;
+	}
 
-  for (const c of commandsList) {
-    await commands.create(c);
-    console.log(`Command ${c.name} deployed`);
-  }
+	for (const c of commandsList) {
+		await commands.create(c);
+		console.log(`Command ${c.name} deployed`);
+	}
 
-  console.log("Finish!");
+	console.log("Finish!");
 
-  process.exit();
+	process.exit();
 });
 
 client.once("reconnecting", () => {
-  console.log("Reconnecting!");
+	console.log("Reconnecting!");
 });
 client.once("disconnect", () => {
-  console.log("Disconnect!");
+	console.log("Disconnect!");
 });
 
 // Login to Discord with your client"s token
