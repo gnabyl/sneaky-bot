@@ -5,6 +5,7 @@ const { Client, Intents } = require("discord.js");
 const { executeSearch } = require('./command/search');
 const { SEARCH_COMMAND } = require('./utils/constants');
 const LastCommand = require("./utils/last-command");
+const SongQueue = require('./utils/song-queue');
 
 // Configuration
 dotenv.config();
@@ -12,6 +13,7 @@ dotenv.config();
 // Declaration
 const token = process.env.TOKEN;
 const lastCommand = new LastCommand();
+const serverQueue = new SongQueue();
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
@@ -87,6 +89,7 @@ const handleButton = async (interaction) => {
     switch (command) {
 		case SEARCH_COMMAND:
 			const songIndex = parseInt(interaction.customId);
+			serverQueue.push(results[songIndex]);
 			interaction.editReply({
 				content: `Track **${results[songIndex].title}** added to the queue!`,
 			});
