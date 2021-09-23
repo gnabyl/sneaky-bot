@@ -1,15 +1,18 @@
-const dotenv = require('dotenv');
-const { Client, Intents, MessageButton, MessageActionRow } = require("discord.js");
-const { search } = require('./command/search');
+// Libraries
 
+const dotenv = require('dotenv');
+const { Client, Intents } = require("discord.js");
+const { executeSearch } = require('./command/search');
+const { SEARCH_COMMAND } = require('./utils/constants');
+
+// Configuration
 dotenv.config();
 
-const prefix = process.env.PREFIX;
+// Declaration
 const token = process.env.TOKEN;
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
-const queue = new Map();
 
 // When the client is ready, run this code (only once)
 client.once("ready", async () => {
@@ -27,9 +30,12 @@ client.once("disconnect", () => {
 client.login(token);
 
 client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isCommand()) {
-		return;
+	if (interaction.isCommand()) {
+		handleCommand(interaction);
 	}
+});
+
+const handleCommand = async (interaction) => {
 	const { commandName, options } = interaction;
 
 	switch (commandName) {
@@ -50,36 +56,12 @@ client.on('interactionCreate', async (interaction) => {
 			});
 
 			break;
-		case "search":
-			const songName = options.getString("song") || "";
-			const limit = options.getNumber("limit") || 5;
-
-			interaction.deferReply({
-				ephemeral: true
-			});
-
-			res = await search(songName, limit);
-
-			response = `Here are ${limit} results:`;
-
-			const buttonsRow = new MessageActionRow();
-
-			for (let i = 0; i < res.length; i ++) {
-				response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${res[i].timestamp})`;
-				buttonsRow.addComponents(
-					new MessageButton()
-						.setCustomId(i.toString())
-						.setLabel(i.toString())
-						.setStyle("PRIMARY")
-				);
-			}
-
-
-			interaction.editReply({
-				content: response,
-				components: [buttonsRow]
+		case SEARCH_COMMAND:
+			lastCommand.set(interaction.guildId, interaction.userId, {
+				command: SEARCH_COMMAND,
+				results: await executeSearch(interaction)
 			});
 		default:
 			break;
 	}
-});
+}
