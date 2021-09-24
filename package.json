@@ -22,10 +22,9 @@
   },
   "homepage": "https://github.com/bangjdev/sneaky-bot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.6.0",
     "@discordjs/voice": "^0.6.0",
     "discord.js": "^13.1.0",
-    "ffmpeg": "0.0.4",
+    "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.0",
     "fluent-ffmpeg": "^2.1.2",
     "libsodium-wrappers": "^0.7.9",

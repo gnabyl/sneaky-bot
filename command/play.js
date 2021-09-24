@@ -13,7 +13,11 @@ const play = async (guild, queue) => {
     }
   
     if (queue.getQueue(guild.id).connection.subscribe(player)) {
-        const stream = ytdl(song.url);
+        const stream = ytdl(song.url, {
+            filter: 'audioonly',
+            quality: 'highestaudio',
+            highWaterMark: 1<<25
+        });
         const resource = createAudioResource(stream);
         player.play(resource);
         queue.getQueue(guild.id).textChannel.send(`Now playing: **${song.title}**`);
