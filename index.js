@@ -4,9 +4,10 @@ const dotenv = require("dotenv");
 const { Client, Intents } = require("discord.js");
 const { executeSearch } = require("./command/search");
 const { executePlay } = require("./command/play");
-const { SEARCH_COMMAND, PLAY_COMMAND } = require("./utils/constants");
+const { SEARCH_COMMAND, PLAY_COMMAND, SKIP_COMMAND } = require("./utils/constants");
 const LastCommand = require("./utils/last-command");
 const SongQueue = require("./utils/song-queue");
+const { executeSkip } = require("./command/skip");
 
 // Configuration
 dotenv.config();
@@ -71,6 +72,12 @@ const handleCommand = async (interaction) => {
 			lastCommand.set(interaction.guildId, interaction.userId, {
 				command: SEARCH_COMMAND,
 				results: await executeSearch(interaction)
+			});
+			break;
+		case SKIP_COMMAND:
+			lastCommand.set(interaction.guildId, interaction.userId, {
+				command: SKIP_COMMAND,
+				results: await executeSkip(interaction, queue)
 			});
 			break;
 		default:

@@ -39,5 +39,17 @@ exports.commandsList = [
 				"type": Constants.ApplicationCommandOptionTypes.NUMBER
 			}
 		]
-	}
+	},
+	{
+		"name": "skip",
+		"description": "Skip songs",
+		"options": [
+			{
+				"name": "number",
+				"description": "How many songs do you want to skip?",
+				"required": false,
+				"type": Constants.ApplicationCommandOptionTypes.NUMBER,
+			}
+		]
+	}	
 ];

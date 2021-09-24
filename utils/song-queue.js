@@ -34,6 +34,7 @@ module.exports = class SongQueue {
     }
 
     destroyQueue(guildId) {
+        this.queue[guildId] = null;
         this.queue.delete(guildId);
     }
 }

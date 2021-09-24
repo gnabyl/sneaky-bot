@@ -5,8 +5,9 @@ const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
     const song = queue.getSong(guild.id);
     if (!song) {
-        queue.getQueue(guild.id).voiceChannel.leave();
+        console.log("Destroying queue");
         queue.destroyQueue(guild.id);
+        console.log(queue.getQueue(guild.id));
         return;
     }
 
@@ -30,7 +31,7 @@ const play = async (guild, queue) => {
 
 }
 
-const executePlay = async (interaction, queue, songRequest) => {
+const executePlay = async (interaction, queue, songRequest = null) => {
     const guild = interaction.guild;
 	const member = guild.members.cache.get(interaction.member.user.id);
 	const voiceChannel = member.voice.channel;
@@ -49,17 +50,22 @@ const executePlay = async (interaction, queue, songRequest) => {
             playing: true
         }
         queue.setQueue(guild.id, queueObject);
-        queue.addSong(guild.id, songRequest);
-    } else {
-        queue.addSong(guild.id, songRequest);
     }
 
-    await interaction.channel.send(`Track **${songRequest.title}** added to the queue!`);
+    if (songRequest) {
+        queue.addSong(guild.id, songRequest);
+        await interaction.channel.send(`Track **${songRequest.title}** added to the queue!`);
+    }
 
     connectAndPlay(guild, queue);
 }
 
 const connectAndPlay = (guild, queue) => {
+
+    if (!queue.getQueue(guild.id)) {
+        return;
+    }
+
     let voiceChannel = queue.getQueue(guild.id).voiceChannel;
     queue.getQueue(guild.id).connection = getVoiceConnection(voiceChannel.guild.id);
     console.log("Connection " + queue.getQueue(guild.id).connection);
@@ -69,12 +75,15 @@ const connectAndPlay = (guild, queue) => {
             guildId: guild.id,
             adapterCreator: guild.voiceAdapterCreator
         });
-        play(guild, queue);
         queue.getQueue(guild.id).connection.on(VoiceConnectionStatus.Disconnected, () => {
             console.log("Bot disconnected");
             queue.getQueue(guild.id).connection.destroy();
         });
     }
+    if (queue.getQueue(guild.id).player._state.status === AudioPlayerStatus.Idle) {
+        play(guild, queue);
+    }
 }
 
 exports.executePlay = executePlay;
+exports.connectAndPlay = connectAndPlay;
