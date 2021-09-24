@@ -1,4 +1,4 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, getVoiceConnection } = require("@discordjs/voice");
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, entersState } = require("@discordjs/voice");
 const ytdl = require("ytdl-core");
 
 const player = createAudioPlayer();
@@ -18,7 +18,7 @@ const player = createAudioPlayer();
 //     }
 // }
 
-function play(guild, queue) {
+const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
     const song = queue.getSong(guild.id);
     if (!song) {
@@ -32,6 +32,13 @@ function play(guild, queue) {
         const resource = createAudioResource(stream);
         player.play(resource);
         queue.getQueue(guild.id).textChannel.send(`Now playing: **${song.title}**`);
+
+        try {
+            await entersState(player, AudioPlayerStatus.Idle);
+            play(guild, queue);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
 }
@@ -46,7 +53,6 @@ const executePlay = async (interaction, queue, songRequest) => {
     } 
     
     if (!queue.getQueue(guild.id)) {
-        console.log("Empty queue found");
         const queueObject = {
             textChannel: interaction.channel,
             voiceChannel: voiceChannel,
@@ -54,29 +60,25 @@ const executePlay = async (interaction, queue, songRequest) => {
             songs: [],
             playing: true
         }
-        console.log("Init queue");
         queue.setQueue(guild.id, queueObject);
-        console.log("Add song");
         queue.addSong(guild.id, songRequest);
         try {
-            console.log("Connect to voice");
             var connection = joinVoiceChannel({
                 channelId: voiceChannel.id,
                 guildId: guild.id,
                 adapterCreator: guild.voiceAdapterCreator
             });
             queueObject.connection = connection;
-            console.log("Play");
             play(guild, queue);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             queue.destroyQueue(guild.id);
             return interaction.editReply(err);
         }
     } else {
         queue.addSong(guild.id, songRequest);
-        return interaction.editReply(`Track **${songRequest.title}** added to the queue!`);
     }
+    return interaction.editReply(`Track **${songRequest.title}** added to the queue!`);
 }
 
 exports.executePlay = executePlay;
