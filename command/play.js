@@ -3,8 +3,6 @@ const ytdl = require("ytdl-core");
 
 const player = createAudioPlayer();
 
-let connection = null;
-
 const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
     const song = queue.getSong(guild.id);
@@ -14,7 +12,7 @@ const play = async (guild, queue) => {
         return;
     }
 
-    if (connection.subscribe(player)) {
+    if (queue.getQueue(guild.id).connection.subscribe(player)) {
         const stream = ytdl(song.url, {
             filter: 'audioonly',
             quality: 'highestaudio',
@@ -47,6 +45,7 @@ const executePlay = async (interaction, queue, songRequest) => {
         const queueObject = {
             textChannel: interaction.channel,
             voiceChannel: voiceChannel,
+            connection: null,
             songs: [],
             playing: true
         }
@@ -63,20 +62,18 @@ const executePlay = async (interaction, queue, songRequest) => {
 
 const connectAndPlay = (guild, queue) => {
     let voiceChannel = queue.getQueue(guild.id).voiceChannel;
-    connection = getVoiceConnection(voiceChannel.guild.id);
-    console.log("Connection " + connection);
-    if (!connection) {
-        connection = joinVoiceChannel({
+    queue.getQueue(guild.id).connection = getVoiceConnection(voiceChannel.guild.id);
+    console.log("Connection " + queue.getQueue(guild.id).connection);
+    if (!queue.getQueue(guild.id).connection) {
+        queue.getQueue(guild.id).connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: guild.id,
             adapterCreator: guild.voiceAdapterCreator
         });
         play(guild, queue);
-        connection.on(VoiceConnectionStatus.Disconnected, () => {
+        queue.getQueue(guild.id).connection.on(VoiceConnectionStatus.Disconnected, () => {
             console.log("Bot disconnected");
-            if (connection) {
-                connection.destroy();
-            }
+            queue.getQueue(guild.id).connection.destroy();
         });
     }
 }
