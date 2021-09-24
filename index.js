@@ -86,15 +86,15 @@ const handleCommand = async (interaction) => {
 };
 
 const handleButton = async (interaction) => {
-    const guildId = interaction.guildId;
-    const userId = interaction.userId;
+	const guildId = interaction.guildId;
+	const userId = interaction.userId;
 
 	const { command, results } = lastCommand.get(guildId, userId);
 	
 	await interaction.message.delete();
-    // Need to check if the button clicked belongs to the same message as last command
+	// Need to check if the button clicked belongs to the same message as last command
 
-    switch (command) {
+	switch (command) {
 		case SEARCH_COMMAND:
 			handleSearchButton(interaction, queue, results);
 			break;
