@@ -76,13 +76,11 @@ const handleCommand = async (interaction) => {
 		default:
 			break;
 	}
-}
+};
 
 const handleButton = async (interaction) => {
     const guildId = interaction.guildId;
     const userId = interaction.userId;
-
-    await interaction.deferReply();
 
 	const { command, results } = lastCommand.get(guildId, userId);
 	
@@ -91,8 +89,7 @@ const handleButton = async (interaction) => {
 
     switch (command) {
 		case SEARCH_COMMAND:
-			const songIndex = parseInt(interaction.customId);
-			executePlay(interaction, queue, results[songIndex]);
+			handleSearchButton(interaction, queue, results);
 			break;
 		default:
 			interaction.editReply({
@@ -101,3 +98,8 @@ const handleButton = async (interaction) => {
 			break;
 	}
 }
+
+const handleSearchButton = async (interaction, queue, results) => {
+	const songIndex = parseInt(interaction.customId);
+	executePlay(interaction, queue, results[songIndex]);
+};

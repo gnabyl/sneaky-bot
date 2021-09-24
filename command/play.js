@@ -1,7 +1,9 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, entersState } = require("@discordjs/voice");
+const { getVoiceConnection, joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, entersState, VoiceConnectionStatus } = require("@discordjs/voice");
 const ytdl = require("ytdl-core");
 
 const player = createAudioPlayer();
+
+let connection = null;
 
 const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
@@ -11,8 +13,8 @@ const play = async (guild, queue) => {
         queue.destroyQueue(guild.id);
         return;
     }
-  
-    if (queue.getQueue(guild.id).connection.subscribe(player)) {
+
+    if (connection.subscribe(player)) {
         const stream = ytdl(song.url, {
             filter: 'audioonly',
             quality: 'highestaudio',
@@ -38,36 +40,45 @@ const executePlay = async (interaction, queue, songRequest) => {
 	const voiceChannel = member.voice.channel;
 
     if (!voiceChannel) {
-        return interaction.editReply("You must be in a voice channel to play music!");
-    } 
+        return interaction.channel.send("You must be in a voice channel to play music!");
+    }
     
     if (!queue.getQueue(guild.id)) {
         const queueObject = {
             textChannel: interaction.channel,
             voiceChannel: voiceChannel,
-            connection: null,
             songs: [],
             playing: true
         }
         queue.setQueue(guild.id, queueObject);
         queue.addSong(guild.id, songRequest);
-        try {
-            var connection = joinVoiceChannel({
-                channelId: voiceChannel.id,
-                guildId: guild.id,
-                adapterCreator: guild.voiceAdapterCreator
-            });
-            queueObject.connection = connection;
-            play(guild, queue);
-        } catch (err) {
-            console.error(err);
-            queue.destroyQueue(guild.id);
-            return interaction.editReply(err);
-        }
     } else {
         queue.addSong(guild.id, songRequest);
     }
-    return interaction.editReply(`Track **${songRequest.title}** added to the queue!`);
+
+    await interaction.channel.send(`Track **${songRequest.title}** added to the queue!`);
+
+    connectAndPlay(guild, queue);
+}
+
+const connectAndPlay = (guild, queue) => {
+    let voiceChannel = queue.getQueue(guild.id).voiceChannel;
+    connection = getVoiceConnection(voiceChannel.guild.id);
+    console.log("Connection " + connection);
+    if (!connection) {
+        connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: guild.id,
+            adapterCreator: guild.voiceAdapterCreator
+        });
+        play(guild, queue);
+        connection.on(VoiceConnectionStatus.Disconnected, () => {
+            console.log("Bot disconnected");
+            if (connection) {
+                connection.destroy();
+            }
+        });
+    }
 }
 
 exports.executePlay = executePlay;
