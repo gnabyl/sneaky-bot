@@ -3,21 +3,6 @@ const ytdl = require("ytdl-core");
 
 const player = createAudioPlayer();
 
-// const play = (guildId, queue) => {
-//     const song = queue.getSong(guildId);
-//     if (!song) {
-//         queue.destroyQueue(guildId);
-//         return;
-//     }
-//     const connection = getVoiceConnection(guildId);
-//     if (connection.subscribe(player)) {
-//         const stream = ytdl(song.url);
-//         const resource = createAudioResource(stream);
-//         player.play(resource);
-//         queue.getQueue(guildId).textChannel.send(`Playing now...${song.title}`);
-//     }
-// }
-
 const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
     const song = queue.getSong(guild.id);
