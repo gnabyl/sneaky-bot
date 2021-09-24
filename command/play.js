@@ -1,8 +1,6 @@
 const { getVoiceConnection, joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, entersState, VoiceConnectionStatus } = require("@discordjs/voice");
 const ytdl = require("ytdl-core");
 
-const player = createAudioPlayer();
-
 const play = async (guild, queue) => {
     console.log(queue.showQueue(guild.id));
     const song = queue.getSong(guild.id);
@@ -12,18 +10,18 @@ const play = async (guild, queue) => {
         return;
     }
 
-    if (queue.getQueue(guild.id).connection.subscribe(player)) {
+    if (queue.getQueue(guild.id).connection.subscribe(queue.getQueue(guild.id).player)) {
         const stream = ytdl(song.url, {
             filter: 'audioonly',
             quality: 'highestaudio',
             highWaterMark: 1<<25
         });
         const resource = createAudioResource(stream);
-        player.play(resource);
+        queue.getQueue(guild.id).player.play(resource);
         queue.getQueue(guild.id).textChannel.send(`Now playing: **${song.title}**`);
 
         try {
-            await entersState(player, AudioPlayerStatus.Idle);
+            await entersState(queue.getQueue(guild.id).player, AudioPlayerStatus.Idle);
             play(guild, queue);
         } catch (err) {
             console.error(err);
@@ -46,6 +44,7 @@ const executePlay = async (interaction, queue, songRequest) => {
             textChannel: interaction.channel,
             voiceChannel: voiceChannel,
             connection: null,
+            player: createAudioPlayer(),
             songs: [],
             playing: true
         }
