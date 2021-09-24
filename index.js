@@ -1,12 +1,12 @@
 // Libraries
 
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 const { Client, Intents } = require("discord.js");
-const { executeSearch } = require('./command/search');
-const { SEARCH_COMMAND, PLAY_COMMAND } = require('./utils/constants');
+const { executeSearch } = require("./command/search");
+const { executePlay } = require("./command/play");
+const { SEARCH_COMMAND, PLAY_COMMAND } = require("./utils/constants");
 const LastCommand = require("./utils/last-command");
-const SongQueue = require('./utils/song-queue');
-const { joinVoiceChannel } = require('@discordjs/voice');
+const SongQueue = require("./utils/song-queue");
 
 // Configuration
 dotenv.config();
@@ -14,7 +14,7 @@ dotenv.config();
 // Declaration
 const token = process.env.TOKEN;
 const lastCommand = new LastCommand();
-const serverQueue = new SongQueue();
+const queue = new SongQueue();
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
@@ -67,31 +67,6 @@ const handleCommand = async (interaction) => {
 			});
 
 			break;
-		// All the music commands
-		case SEARCH_COMMAND:
-		case PLAY_COMMAND:
-			const guild = client.guilds.cache.get(interaction.guildId);
-			const member = guild.members.cache.get(interaction.member.user.id);
-			const voiceChannel = member.voice.channel;
-			if (!voiceChannel) {
-				interaction.reply("You must be in a voice channel to play music!");
-				break;
-			} else {
-				try {
-					joinVoiceChannel({
-						channelId: voiceChannel.id,
-						guildId: guild.id,
-						adapterCreator: guild.voiceAdapterCreator
-					});
-				} catch (err) {
-					interaction.reply("I can't join with you!");
-				}
-			}
-		default:
-			break;
-	}
-
-	switch (commandName) {
 		case SEARCH_COMMAND:
 			lastCommand.set(interaction.guildId, interaction.userId, {
 				command: SEARCH_COMMAND,
@@ -117,10 +92,7 @@ const handleButton = async (interaction) => {
     switch (command) {
 		case SEARCH_COMMAND:
 			const songIndex = parseInt(interaction.customId);
-			serverQueue.push(guildId, results[songIndex]);
-			interaction.editReply({
-				content: `Track **${results[songIndex].title}** added to the queue!`,
-			});
+			executePlay(interaction, queue, results[songIndex]);
 			break;
 		default:
 			interaction.editReply({

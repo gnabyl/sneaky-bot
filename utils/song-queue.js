@@ -3,17 +3,37 @@ module.exports = class SongQueue {
         this.queue = new Map();
     }
 
-    push(guildId, songRequest) {
-        if (!this.queue[guildId]) {
-            this.queue[guildId] = [];
-        }
-        this.queue[guildId].push(songRequest);
+    setQueue(guildId, queueObject) {
+        this.queue[guildId] = queueObject;
     }
 
-    pop(guildId) {
+    getQueue(guildId) {
+        return this.queue[guildId];
+    }
+
+    addSong(guildId, songRequest) {
+        if (!this.queue[guildId].songs) {
+            this.queue[guildId].songs = [];
+        }
+        this.queue[guildId].songs.push(songRequest);
+    }
+
+    getSong(guildId) {
         if (!this.queue[guildId]) {
             return null;
         }
-        return this.queue[guildId].shift();
+        return this.queue[guildId].songs.shift();
+    }
+
+    isEmpty(guildId) {
+        return (!this.queue[guildId] || this.queue[guildId].songs.length == 0);
+    }
+
+    showQueue(guildId) {
+        return this.queue[guildId].songs;
+    }
+
+    destroyQueue(guildId) {
+        this.queue.delete(guildId);
     }
 }

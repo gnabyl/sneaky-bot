@@ -11,7 +11,8 @@ const search = async (songName, limit) => {
 			views: v.views,
 			timestamp: v.timestamp,
 			author: v.author.name,
-			videoId: v.videoId
+			videoId: v.videoId,
+			url: v.url
 		};
 	});
 }
