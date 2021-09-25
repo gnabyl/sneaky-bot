@@ -12,7 +12,7 @@
     "build": "tsc",
     "prestart": "npm run deploy",
     "start": "node -r tsconfig-paths/register -r ts-node/register .",
-    "prepush": "npm run lint"
+    "precommit": "npm run lint"
   },
   "repository": {
     "type": "git",
