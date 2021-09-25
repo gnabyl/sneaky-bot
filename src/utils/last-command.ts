@@ -1,5 +1,5 @@
-import { Service } from 'typedi';
 import { ILastCommand } from '@/model/last-commands';
+import { Service } from 'typedi';
 
 @Service()
 export class LastCommand {

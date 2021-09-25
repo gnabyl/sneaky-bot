@@ -9,8 +9,8 @@ import {
   getVoiceConnection,
   joinVoiceChannel,
 } from '@discordjs/voice';
-
 import { ButtonInteraction, Guild } from 'discord.js';
+
 import { SongQueue } from '@/utils/song-queue';
 
 async function play(guild: Guild, queue: SongQueue) {

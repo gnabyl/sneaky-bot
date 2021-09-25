@@ -1,12 +1,13 @@
 import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
 import Container, { Service } from 'typedi';
-import { executeSearch } from '@/commands/search';
-import { executeSkip } from '@/commands/skip';
+import { executeJoin, executeLeave } from '@/commands/connection';
+
 import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
 import { SongQueue } from './song-queue';
 import { executePlay } from '@/commands/play';
-import { executeJoin, executeLeave } from '@/commands/connection';
+import { executeSearch } from '@/commands/search';
+import { executeSkip } from '@/commands/skip';
 
 @Service()
 export class Handlers {

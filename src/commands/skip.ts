@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import { SongQueue } from '@/utils/song-queue';
-import { createAudioPlayer } from '@discordjs/voice';
 import { connectAndPlay } from './play';
+import { createAudioPlayer } from '@discordjs/voice';
 
 export async function executeSkip(
   interaction: CommandInteraction,

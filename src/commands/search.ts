@@ -1,9 +1,10 @@
+import * as yts from 'yt-search';
+
 import {
   CommandInteraction,
   MessageActionRow,
   MessageButton,
 } from 'discord.js';
-import * as yts from 'yt-search';
 
 async function search(songName: string, limit: number) {
   const searchResult = await yts(songName);

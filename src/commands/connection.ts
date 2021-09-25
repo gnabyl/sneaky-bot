@@ -1,12 +1,13 @@
-import { SongQueue } from '@/utils/song-queue';
 import {
+  VoiceConnectionStatus,
   createAudioPlayer,
   getVoiceConnection,
   joinVoiceChannel,
-  VoiceConnectionStatus,
 } from '@discordjs/voice';
+
 import { CommandInteraction } from 'discord.js';
 import Container from 'typedi';
+import { SongQueue } from '@/utils/song-queue';
 
 const queue = Container.get(SongQueue);
 
