@@ -26,7 +26,7 @@ bot.initDiscordBot(client);
 // Once actions
 bot.onReady();
 bot.onReconnecting();
-bot.onDisconnect()
+bot.onDisconnect();
 
 // Handlers DI
 const handlers = Container.get(Handlers);
