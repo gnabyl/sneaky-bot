@@ -11,7 +11,7 @@
     "build": "tsc",
     "prestart": "npm run build && npm run deploy",
     "start": "node -r tsconfig-paths/register -r ts-node/register .",
-    "prepush": "npm run lint"
+    "pre-commit": "npm run lint"
   },
   "repository": {
     "type": "git",
