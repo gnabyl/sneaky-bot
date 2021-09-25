@@ -10,7 +10,7 @@ import {
   joinVoiceChannel,
 } from '@discordjs/voice';
 
-import { Guild } from 'discord.js';
+import { ButtonInteraction, Guild } from 'discord.js';
 import { SongQueue } from '@/utils/song-queue';
 
 async function play(guild: Guild, queue: SongQueue) {
@@ -50,7 +50,11 @@ async function play(guild: Guild, queue: SongQueue) {
   }
 }
 
-export async function executePlay(interaction, queue, songRequest = null) {
+export async function executePlay(
+  interaction: ButtonInteraction,
+  queue: SongQueue,
+  songRequest = null
+) {
   const guild = interaction.guild;
   const member = guild.members.cache.get(interaction.member.user.id);
   const voiceChannel = member.voice.channel;

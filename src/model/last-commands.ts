@@ -9,4 +9,6 @@ export enum Commands {
   SEARCH = 'search',
   PLAY = 'play',
   SKIP = 'skip',
+  LEAVE = 'leave',
+  JOIN = 'join',
 }

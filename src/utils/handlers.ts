@@ -6,6 +6,13 @@ import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
 import { SongQueue } from './song-queue';
 import { executePlay } from '@/commands/play';
+<<<<<<< Updated upstream
+=======
+import { executeSearch } from '@/commands/search';
+import { executeSkip } from '@/commands/skip';
+import math = require('mathjs');
+import { executeJoin, executeLeave } from '@/commands/connection';
+>>>>>>> Stashed changes
 
 @Service()
 export class Handlers {
@@ -52,6 +59,14 @@ export class Handlers {
           command: Commands.SKIP,
           results: await executeSkip(interaction, this.queue),
         });
+        break;
+
+      case Commands.LEAVE:
+        executeLeave(interaction);
+        break;
+
+      case Commands.JOIN:
+        executeJoin(interaction);
         break;
 
       default:
