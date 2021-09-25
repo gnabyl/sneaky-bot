@@ -5,20 +5,14 @@ exports.commandsList = [
     description: 'You say PING I say PONG!',
   },
   {
-    name: 'add',
-    description: 'Add two numbers',
+    name: 'math',
+    description: 'Math expression',
     options: [
       {
-        name: 'number1',
-        description: 'First number',
+        name: 'expression',
+        description: 'Just type your math',
         required: true,
-        type: Constants.ApplicationCommandOptionTypes.NUMBER,
-      },
-      {
-        name: 'number2',
-        description: 'Second number',
-        required: true,
-        type: Constants.ApplicationCommandOptionTypes.NUMBER,
+        type: Constants.ApplicationCommandOptionTypes.STRING,
       },
     ],
   },

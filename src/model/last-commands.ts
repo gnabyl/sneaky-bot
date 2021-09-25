@@ -6,6 +6,7 @@ export interface ICommandObject {
 }
 
 export enum Commands {
+  MATH = 'math',
   SEARCH = 'search',
   PLAY = 'play',
   SKIP = 'skip',

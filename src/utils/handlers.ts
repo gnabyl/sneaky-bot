@@ -1,11 +1,13 @@
 import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
 import Container, { Service } from 'typedi';
-import { executeSearch } from '@/commands/search';
-import { executeSkip } from '@/commands/skip';
+
 import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
 import { SongQueue } from './song-queue';
 import { executePlay } from '@/commands/play';
+import { executeSearch } from '@/commands/search';
+import { executeSkip } from '@/commands/skip';
+import math = require('mathjs');
 
 @Service()
 export class Handlers {
@@ -29,15 +31,22 @@ export class Handlers {
         });
         break;
 
-      case 'add':
-        const firstNumber = options.getNumber('number1') || 0;
-        const secondNumber = options.getNumber('number2') || 0;
-        const res = firstNumber + secondNumber;
+      case Commands.MATH:
+        const expr = options.getString('expression');
 
-        interaction.reply({
-          content: res.toString(),
-          ephemeral: true,
-        });
+        try {
+          const result = math.evaluate(expr);
+          interaction.reply({
+            content: result.toString(),
+            ephemeral: true,
+          });
+        } catch (err) {
+          interaction.reply({
+            content: 'Đéo biết làm toán à',
+            ephemeral: true,
+          });
+        }
+
         break;
 
       case Commands.SEARCH:
