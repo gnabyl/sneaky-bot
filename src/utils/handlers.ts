@@ -1,3 +1,5 @@
+import * as math from 'mathjs';
+
 import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
 import Container, { Service } from 'typedi';
 import { executeJoin, executeLeave } from '@/commands/connection';
@@ -31,15 +33,22 @@ export class Handlers {
         });
         break;
 
-      case 'add':
-        const firstNumber = options.getNumber('number1') || 0;
-        const secondNumber = options.getNumber('number2') || 0;
-        const res = firstNumber + secondNumber;
+      case Commands.MATH:
+        const expr = options.getString('expression');
 
-        interaction.reply({
-          content: res.toString(),
-          ephemeral: true,
-        });
+        try {
+          const result = math.evaluate(expr);
+          interaction.reply({
+            content: result.toString(),
+            ephemeral: true,
+          });
+        } catch (err) {
+          interaction.reply({
+            content: 'Đéo biết làm toán à',
+            ephemeral: true,
+          });
+        }
+
         break;
 
       case Commands.SEARCH:
