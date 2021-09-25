@@ -4,6 +4,7 @@
   "description": "A discord music bot.",
   "main": "dist/index.js",
   "scripts": {
+    "postinstall": "husky install",
     "deploy": "node deploy-commands.js",
     "dev": "nodemon --config nodemon.json src/index.ts ",
     "lint": " tslint -c tslint.json -p tsconfig.json --fix",
@@ -11,7 +12,7 @@
     "build": "tsc",
     "prestart": "npm run deploy",
     "start": "node -r tsconfig-paths/register -r ts-node/register .",
-    "pre-commit": "npm run lint"
+    "prepush": "npm run lint"
   },
   "repository": {
     "type": "git",
