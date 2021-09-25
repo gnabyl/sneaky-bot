@@ -7,7 +7,6 @@
     "deploy": "node deploy-commands.js",
     "dev": "nodemon --config nodemon.json src/index.ts ",
     "lint": " tslint -c tslint.json -p tsconfig.json --fix",
-    "prebuild": "npm run lint",
     "build": "tsc",
     "prestart": "npm run build && npm run deploy",
     "start": "node -r tsconfig-paths/register -r ts-node/register .",
