@@ -31,6 +31,13 @@ npm run dev
 ## Source code organization
 
 `commands-list.js` - All the commands' definition.
+
 `deploy-commands.js` - Script to deploy commands to servers. This script should be run only after updating/adding commands.
+
 `src/commands/` - Code for commands go here.
+
 `src/index.ts` - Where everything starts.
+
+## Pull requests
+
+Pull requests are welcome but please process with small commit.
