@@ -1,12 +1,8 @@
 import 'reflect-metadata';
 import { Client, Intents, Interaction } from 'discord.js';
-import { config } from 'dotenv';
 import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
-
-/* Setup dotenv */
-config();
 
 // Create a new client
 const client = new Client({
