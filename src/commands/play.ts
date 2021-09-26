@@ -9,8 +9,9 @@ import {
   getVoiceConnection,
   joinVoiceChannel,
 } from '@discordjs/voice';
-import { ButtonInteraction, Guild } from 'discord.js';
 
+import { Guild } from 'discord.js';
+import { InteractiveInteraction } from '@/model/interaction';
 import { SongQueue } from '@/utils/song-queue';
 
 async function play(guild: Guild, queue: SongQueue) {
@@ -51,7 +52,7 @@ async function play(guild: Guild, queue: SongQueue) {
 }
 
 export async function executePlay(
-  interaction: ButtonInteraction,
+  interaction: InteractiveInteraction,
   queue: SongQueue,
   songRequest = null
 ) {

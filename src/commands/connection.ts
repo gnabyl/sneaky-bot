@@ -5,13 +5,13 @@ import {
   joinVoiceChannel,
 } from '@discordjs/voice';
 
-import { CommandInteraction } from 'discord.js';
 import Container from 'typedi';
+import { InteractiveInteraction } from '@/model/interaction';
 import { SongQueue } from '@/utils/song-queue';
 
 const queue = Container.get(SongQueue);
 
-export function executeLeave(interaction: CommandInteraction) {
+export function executeLeave(interaction: InteractiveInteraction) {
   try {
     getVoiceConnection(interaction.guildId).disconnect();
     interaction.reply({
@@ -26,7 +26,7 @@ export function executeLeave(interaction: CommandInteraction) {
   }
 }
 
-export function executeJoin(interaction: CommandInteraction) {
+export function executeJoin(interaction: InteractiveInteraction) {
   const guild = interaction.guild;
   const member = guild.members.cache.get(interaction.member.user.id);
   const voiceChannel = member.voice.channel;
