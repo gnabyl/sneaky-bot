@@ -1,5 +1,5 @@
-import { Service } from 'typedi';
 import { ILastCommand } from '@/model/last-commands';
+import { Service } from 'typedi';
 
 @Service()
 export class LastCommand {
@@ -17,7 +17,7 @@ export class LastCommand {
     }
 
     this.lastCommand[guildId][userId] = commandObject;
-  };
+  }
 
   get = (guildId, userId) => {
     if (!this.lastCommand[guildId]) {
@@ -32,5 +32,5 @@ export class LastCommand {
     }
 
     return this.lastCommand[guildId][userId];
-  };
+  }
 }

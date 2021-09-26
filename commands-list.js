@@ -46,4 +46,12 @@ exports.commandsList = [
       },
     ],
   },
+  {
+    name: 'join',
+    description: 'Me joining',
+  },
+  {
+    name: 'leave',
+    description: 'Me leaving',
+  },
 ];

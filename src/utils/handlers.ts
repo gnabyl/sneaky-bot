@@ -1,5 +1,8 @@
+import * as math from 'mathjs';
+
 import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
 import Container, { Service } from 'typedi';
+import { executeJoin, executeLeave } from '@/commands/connection';
 
 import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
@@ -7,7 +10,6 @@ import { SongQueue } from './song-queue';
 import { executePlay } from '@/commands/play';
 import { executeSearch } from '@/commands/search';
 import { executeSkip } from '@/commands/skip';
-import math = require('mathjs');
 
 @Service()
 export class Handlers {
@@ -37,13 +39,13 @@ export class Handlers {
         try {
           const result = math.evaluate(expr);
           interaction.reply({
-            content: result.toString(),
-            ephemeral: true,
+            content: `${expr} = ${result.toString()}`,
+            ephemeral: false,
           });
         } catch (err) {
           interaction.reply({
             content: 'Đéo biết làm toán à',
-            ephemeral: true,
+            ephemeral: false,
           });
         }
 
@@ -61,6 +63,14 @@ export class Handlers {
           command: Commands.SKIP,
           results: await executeSkip(interaction, this.queue),
         });
+        break;
+
+      case Commands.LEAVE:
+        executeLeave(interaction);
+        break;
+
+      case Commands.JOIN:
+        executeJoin(interaction);
         break;
 
       default:

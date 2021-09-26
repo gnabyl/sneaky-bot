@@ -1,5 +1,5 @@
-import { Service } from 'typedi';
 import { ISongQueue } from '@/model/song-queue';
+import { Service } from 'typedi';
 
 @Service()
 export class SongQueue {
