@@ -39,13 +39,13 @@ export class Handlers {
         try {
           const result = math.evaluate(expr);
           interaction.reply({
-            content: result.toString(),
-            ephemeral: true,
+            content: `${expr} = ${result.toString()}`,
+            ephemeral: false,
           });
         } catch (err) {
           interaction.reply({
             content: 'Đéo biết làm toán à',
-            ephemeral: true,
+            ephemeral: false,
           });
         }
 

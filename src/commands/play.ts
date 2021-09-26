@@ -84,6 +84,7 @@ export async function executePlay(
       `Track **${songRequest.title}** added to the queue!`
     );
   }
+
   connectAndPlay(guild, queue);
 }
 
