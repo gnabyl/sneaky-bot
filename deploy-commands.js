@@ -1,8 +1,8 @@
 const { commandsList } = require('./commands-list');
 const { Client, Intents } = require('discord.js');
-require('dotenv').config();
 
 const token = process.env.BOT_TOKEN;
+
 // Create a new client instance
 const client = new Client({
   intents: [
