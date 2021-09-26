@@ -10,6 +10,7 @@
   "scripts": {
     "postinstall": "husky install",
     "deploy": "node deploy-commands.js",
+    "deploydev": "node -r dotenv/config deploy-commands.js",
     "dev": "nodemon --config nodemon.json src/index.ts ",
     "lint": " tslint -c tslint.json -p tsconfig.json --fix",
     "prebuild": "npm run lint",
