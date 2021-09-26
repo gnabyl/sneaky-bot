@@ -16,12 +16,12 @@ export function executeLeave(interaction: InteractiveInteraction) {
     getVoiceConnection(interaction.guildId).disconnect();
     interaction.reply({
       content: `Disconnected`,
-      ephemeral: true,
+      ephemeral: false,
     });
   } catch (err) {
     interaction.reply({
       content: `I'm not connected`,
-      ephemeral: true,
+      ephemeral: false,
     });
   }
 }
@@ -64,6 +64,6 @@ export function executeJoin(interaction: InteractiveInteraction) {
 
   interaction.reply({
     content: `Connected`,
-    ephemeral: true,
+    ephemeral: false,
   });
 }
