@@ -8,7 +8,7 @@
   },
   "engineStrict" : true,
   "scripts": {
-    "deploy": "node deploy-commands.js",
+    "deploy": "node -r dotenv/config deploy-commands.js",
     "dev": "nodemon --config nodemon.json src/index.ts ",
     "lint": " tslint -c tslint.json -p tsconfig.json --fix",
     "prebuild": "npm run lint",
