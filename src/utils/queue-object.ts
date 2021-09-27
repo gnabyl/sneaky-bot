@@ -110,6 +110,7 @@ export class QueueObject {
     try {
       // Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
       const resource = nextTrack.createAudioResource();
+      resource.metadata = nextTrack;
       this.audioPlayer.play(resource);
       this.isLocked = false;
     } catch (error) {

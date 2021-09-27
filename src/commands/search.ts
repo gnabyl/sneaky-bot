@@ -41,13 +41,13 @@ export async function executeSearch(interaction: CommandInteraction) {
       author: v.title,
       duration: v.timestamp,
       onStart: () => {
-        interaction.channel.send(`Now playing ${title}!`);
+        interaction.channel.send(`Now playing ${v.title}!`);
       },
       onFinish: () => {
-        interaction.channel.send(`Finished ${title}!`);
+        interaction.channel.send(`Finished ${v.title}!`);
       },
       onError: (err) => {
-        interaction.channel.send(`Error occurred while playing ${title} :(`);
+        interaction.channel.send(`Error occurred while playing ${v.title} :(`);
         console.error(err);
       },
     });
