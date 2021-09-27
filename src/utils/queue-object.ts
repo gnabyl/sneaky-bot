@@ -85,11 +85,10 @@ export class QueueObject {
   }
 
   /**
-   * Stops audio playback and empties the queue
+   * Stops audio playback
    */
   public stop() {
     this.isLocked = true;
-    this.songs = [];
     this.audioPlayer.stop(true);
   }
 
@@ -112,12 +111,11 @@ export class QueueObject {
       const resource = nextTrack.createAudioResource();
       resource.metadata = nextTrack;
       this.audioPlayer.play(resource);
-      this.isLocked = false;
     } catch (error) {
       // If an error occurred, try the next item of the queue instead
       nextTrack.onError(error as Error);
-      this.isLocked = false;
       this.playNext();
     }
+    this.isLocked = false;
   }
 }

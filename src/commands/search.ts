@@ -6,7 +6,6 @@ import {
   MessageButton,
 } from 'discord.js';
 import { Track } from '@/utils/track';
-import { title } from 'process';
 
 async function buildSearchResultResponse(res: Track[]) {
   let response = `Here are ${res.length} results:`;
