@@ -1,1 +1,3 @@
-export type ISongQueue = Map<string, any>;
+import { QueueObject } from "@/utils/queue-object";
+
+export type ISongQueue = Map<string, QueueObject>;
