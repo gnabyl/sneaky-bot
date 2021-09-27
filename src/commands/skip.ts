@@ -1,55 +1,37 @@
-import { CommandInteraction } from 'discord.js';
-import { SongQueue } from '@/utils/song-queue';
-import { connectAndPlay } from './play';
+import { CommandInteraction, GuildMember } from 'discord.js';
+import { QueueManager } from '@/utils/queue-manager';
 import { createAudioPlayer } from '@discordjs/voice';
+import Container from 'typedi';
 
-export async function executeSkip(
-  interaction: CommandInteraction,
-  queue: SongQueue
-) {
+export async function executeSkip(interaction: CommandInteraction) {
   // Defer
   await interaction.deferReply();
 
-  const guild = interaction.guild;
-  const member = guild.members.cache.get(interaction.member.user.id);
-  const voiceChannel = member.voice.channel;
+  const queueManager = Container.get(QueueManager);
+  const queue = queueManager.getQueue(interaction.guild.id);
+  const userVoiceChannel = (interaction.member instanceof GuildMember) ? (interaction.member.voice.channel) : null;
 
-  // Empty
-  if (!queue.getQueue(guild.id)) {
-    return interaction.editReply('Empty queue!');
-  }
-
-  // No voice ch
-  if (!voiceChannel) {
+  // No voice channel
+  if (!userVoiceChannel) {
     return interaction.editReply(
       'You must be in a voice channel to skip music!'
     );
   }
 
   // Not same voice channel
-  if (queue.getQueue(guild.id)?.voiceChannel?.id !== voiceChannel.id) {
+  if (queue.voiceChannel.id !== userVoiceChannel.id) {
     return interaction.editReply(
       'You must be in the same voice channel to skip music!'
     );
   }
 
-  const options = interaction.options;
-  const optionsNumber = options.getNumber('number') || 1;
-
-  await queue.getQueue(guild.id).player.stop();
-  queue.getQueue(guild.id).player = createAudioPlayer();
-
-  console.log(queue.getQueue(guild.id).player);
-
-  if (queue.getQueue(guild.id)) {
-    for (let i = 0; i < optionsNumber - 1; i++) {
-      queue.getSong(guild.id);
-    }
+  if (!queue) {
+    await interaction.editReply("I'm not playing!");
+  } else if (queue.songs.length == 0) {
+    await interaction.editReply('Empty queue!');
+  } else {
+    // Stop the player makes it become Idle, which will automatically play next song
+    queue.audioPlayer.stop(true);
+    await interaction.editReply("Track skipped");
   }
-
-  await interaction.editReply({
-    content: `Skipped ${optionsNumber} tracks!`,
-  });
-
-  connectAndPlay(guild, queue);
 }

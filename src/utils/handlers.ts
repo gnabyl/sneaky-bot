@@ -61,7 +61,7 @@ export class Handlers {
       case Commands.SKIP:
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
           command: Commands.SKIP,
-          results: await executeSkip(interaction, this.queue),
+          results: await executeSkip(interaction),
         });
         break;
 
