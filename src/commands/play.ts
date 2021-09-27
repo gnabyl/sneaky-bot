@@ -25,13 +25,14 @@ export async function playAfterSearch(interaction: InteractiveInteraction, track
   // and create a queue.
   if (!queue) {
     if (interaction.member instanceof GuildMember && interaction.member.voice.channel) {
-      const channel = interaction.member.voice.channel;
+      const userVoiceChannel = interaction.member.voice.channel;
       queue = new QueueObject(
         joinVoiceChannel({
-          channelId: channel.id,
-          guildId: channel.guild.id,
-          adapterCreator: channel.guild.voiceAdapterCreator,
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
         }),
+        userVoiceChannel
       );
       queue.voiceConnection.on('error', console.warn);
       queueManager.setQueue(interaction.guildId, queue);

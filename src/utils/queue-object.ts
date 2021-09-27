@@ -7,6 +7,7 @@ import {
   VoiceConnection,
   VoiceConnectionStatus,
 } from '@discordjs/voice';
+import { StageChannel, VoiceChannel } from 'discord.js';
 import { Track } from './track';
 
 /**
@@ -15,14 +16,17 @@ import { Track } from './track';
 export class QueueObject {
   public readonly voiceConnection: VoiceConnection;
   public readonly audioPlayer: AudioPlayer;
+  public readonly voiceChannel: VoiceChannel | StageChannel;
   public songs: Track[];
   public isLocked = false;
   public isConnecting = false;
 
-  public constructor(voiceConnection: VoiceConnection) {
+  public constructor(voiceConnection: VoiceConnection, voiceChannel: VoiceChannel | StageChannel) {
     this.voiceConnection = voiceConnection;
     this.audioPlayer = createAudioPlayer();
     this.songs = [];
+
+    this.voiceChannel = voiceChannel;
 
     this.voiceConnection.on('stateChange', async (_, newState) => {
       if (newState.status === VoiceConnectionStatus.Disconnected) {
