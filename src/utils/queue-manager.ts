@@ -17,4 +17,8 @@ export class QueueManager {
   getQueue(guildId: string) {
     return this.queues.get(guildId);
   }
+
+  deleteQueue(guildId: string) {
+    this.queues.delete(guildId);
+  }
 }

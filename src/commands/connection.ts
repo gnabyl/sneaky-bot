@@ -10,18 +10,14 @@ import { QueueObject } from '@/utils/queue-object';
 
 const queueManager = Container.get(QueueManager);
 
-export function executeLeave(interaction: InteractiveInteraction) {
-  try {
-    getVoiceConnection(interaction.guildId).disconnect();
-    interaction.reply({
-      content: `Disconnected`,
-      ephemeral: false,
-    });
-  } catch (err) {
-    interaction.reply({
-      content: `I'm not connected`,
-      ephemeral: false,
-    });
+export async function executeLeave(interaction: InteractiveInteraction) {
+  const queue = queueManager.getQueue(interaction.guild.id);
+  await interaction.deferReply();
+  if (queue) {
+    queue.voiceConnection.destroy();
+    await interaction.editReply("Disconnected");
+  } else {
+    queueManager.deleteQueue(interaction.guild.id);
   }
 }
 
