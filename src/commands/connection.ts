@@ -16,7 +16,7 @@ export async function executeLeave(interaction: InteractiveInteraction) {
     queue.voiceConnection.destroy();
     await interaction.editReply("Disconnected");
   } else {
-    queueManager.deleteQueue(interaction.guild.id);
+    await interaction.editReply("I'm not connected");
   }
 }
 
@@ -26,10 +26,13 @@ export async function executeJoin(interaction: InteractiveInteraction) {
   const userVoiceChannel = member.voice.channel;
   const queue = queueManager.getQueue(guild.id);
 
+  await interaction.deferReply();
+
   if (!userVoiceChannel) {
-    return interaction.channel.send(
+    await interaction.editReply(
       'You must be in a voice channel to play music!'
     );
+    return;
   }
 
   if (!queue) {
