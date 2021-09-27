@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A discord music bot.",
   "main": "dist/index.js",
-  "engines" : { 
-    "node" : ">=16.9"
+  "engines": {
+    "node": ">=16.9"
   },
-  "engineStrict" : true,
+  "engineStrict": true,
   "scripts": {
     "postinstall": "husky install",
     "deploy": "node deploy-commands.js",
@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.10.1",
+    "@types/yt-search": "^2.3.2",
     "dotenv": "^10.0.0",
     "husky": "^7.0.2",
     "nodemon": "^2.0.13",

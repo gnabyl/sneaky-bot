@@ -6,12 +6,12 @@ export class Track implements TrackData {
   public readonly url: string;
   public readonly title: string;
   public readonly author: string;
-  public readonly duration: number;
+  public readonly duration: string;
   public readonly onStart: () => void; // Execute this when start playing
   public readonly onFinish: () => void; // Execute this when finish playing
   public readonly onError: (error: Error) => void; // Execute this when error
 
-  private constructor({
+  constructor({
     url,
     title,
     author,

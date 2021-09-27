@@ -20,6 +20,8 @@ export async function playAfterSearch(interaction: InteractiveInteraction, track
   const queueManager = Container.get(QueueManager);
   let queue = queueManager.getQueue(guild.id);
 
+  await interaction.deferReply();
+
   // If a queue of the guild doesn't already exist
   // and the user is in a voice channel, join that channel
   // and create a queue.

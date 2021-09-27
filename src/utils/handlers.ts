@@ -10,6 +10,7 @@ import { QueueManager } from './queue-manager';
 import { playAfterSearch } from '@/commands/play';
 import { executeSearch } from '@/commands/search';
 import { executeSkip } from '@/commands/skip';
+import { Track } from './track';
 
 @Service()
 export class Handlers {
@@ -101,7 +102,7 @@ export class Handlers {
     }
   }
 
-  private handleSearchButton(interaction: ButtonInteraction, results) {
+  private handleSearchButton(interaction: ButtonInteraction, results: Track[]) {
     const songIndex = +interaction.customId;
     playAfterSearch(interaction, results[songIndex]);
   }
