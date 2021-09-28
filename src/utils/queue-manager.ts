@@ -7,7 +7,7 @@ export class QueueManager {
   queues: ISongQueue;
 
   constructor() {
-    this.queues = new ISongQueue();
+    this.queues = ISongQueue.create();
   }
 
   setQueue(guildId: string, queue: QueueObject) {

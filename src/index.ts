@@ -5,45 +5,50 @@ import { Client, Intents, Interaction } from 'discord.js';
 import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
-import { config } from 'dotenv';
 
 import path = require('path');
 
-if (process.env.NODE_ENV) {
-  config({
-    path: path.resolve(`.env.${process.env.NODE_ENV}`),
+const setup = async () => {
+  if (process.env.NODE_ENV) {
+    const dotenv = await import('dotenv');
+
+    dotenv.config({
+      path: path.resolve(`.env.${process.env.NODE_ENV}`),
+    });
+  }
+
+  // Create a new client
+  const client = new Client({
+    intents: [
+      Intents.FLAGS.GUILDS,
+      Intents.FLAGS.GUILD_MESSAGES,
+      Intents.FLAGS.GUILD_VOICE_STATES,
+    ],
   });
-}
 
-// Create a new client
-const client = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-  ],
-});
+  // Setup client
+  const bot = Container.get(DiscordBot);
+  bot.initDiscordBot(client);
 
-// Setup client
-const bot = Container.get(DiscordBot);
-bot.initDiscordBot(client);
+  // Once actions
+  bot.onReady();
+  bot.onReconnecting();
+  bot.onDisconnect();
 
-// Once actions
-bot.onReady();
-bot.onReconnecting();
-bot.onDisconnect();
+  // Handlers DI
+  const handlers = Container.get(Handlers);
 
-// Handlers DI
-const handlers = Container.get(Handlers);
+  // Subscriptions
+  bot.onInteractionCreate(async (interaction: Interaction) => {
+    if (interaction.isCommand()) {
+      handlers.handleCommand(interaction);
+      return;
+    }
+    if (interaction.isButton()) {
+      handlers.handleButton(interaction);
+      return;
+    }
+  });
+};
 
-// Subscriptions
-bot.onInteractionCreate(async (interaction: Interaction) => {
-  if (interaction.isCommand()) {
-    handlers.handleCommand(interaction);
-    return;
-  }
-  if (interaction.isButton()) {
-    handlers.handleButton(interaction);
-    return;
-  }
-});
+setup();
