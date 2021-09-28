@@ -1,9 +1,19 @@
 import 'reflect-metadata';
 
 import { Client, Intents, Interaction } from 'discord.js';
+
 import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
+import { config } from 'dotenv';
+
+import path = require('path');
+
+if (process.env.NODE_ENV) {
+  config({
+    path: path.resolve(`.env.${process.env.NODE_ENV}`),
+  });
+}
 
 // Create a new client
 const client = new Client({

@@ -1,10 +1,10 @@
-import { search as yts, VideoSearchResult } from 'yt-search';
-
 import {
   CommandInteraction,
   MessageActionRow,
   MessageButton,
 } from 'discord.js';
+import { VideoSearchResult, search as yts } from 'yt-search';
+
 import { Track } from '@/utils/track';
 
 async function buildSearchResultResponse(res: Track[]) {
@@ -12,7 +12,9 @@ async function buildSearchResultResponse(res: Track[]) {
   const buttonsRow = new MessageActionRow();
 
   for (let i = 0; i < res.length; i++) {
-    response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${res[i].duration})`;
+    response += `\n**${String(i).padStart(3, ' ')}**. ${res[i].title} - (${
+      res[i].duration
+    })`;
     buttonsRow.addComponents(
       new MessageButton()
         .setCustomId(i.toString())
@@ -33,7 +35,7 @@ export async function executeSearch(interaction: CommandInteraction) {
 
   const searchResult = await yts(songName);
   const limitedResult = searchResult.videos.slice(0, limit);
-  const res =  limitedResult.map((v: VideoSearchResult): Track => {
+  const res = limitedResult.map((v: VideoSearchResult): Track => {
     return new Track({
       url: v.url,
       title: v.title,

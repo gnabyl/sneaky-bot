@@ -1,5 +1,7 @@
 import * as ytdl from 'ytdl-core';
+
 import { AudioResource, createAudioResource } from '@discordjs/voice';
+
 import { TrackData } from '@/model/track-data';
 
 export class Track implements TrackData {

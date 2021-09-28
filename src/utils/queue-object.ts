@@ -2,12 +2,13 @@ import {
   AudioPlayer,
   AudioPlayerStatus,
   AudioResource,
-  createAudioPlayer,
-  entersState,
   VoiceConnection,
   VoiceConnectionStatus,
+  createAudioPlayer,
+  entersState,
 } from '@discordjs/voice';
 import { StageChannel, VoiceChannel } from 'discord.js';
+
 import { Track } from './track';
 
 /**
@@ -21,7 +22,10 @@ export class QueueObject {
   public isLocked = false;
   public isConnecting = false;
 
-  public constructor(voiceConnection: VoiceConnection, voiceChannel: VoiceChannel | StageChannel) {
+  public constructor(
+    voiceConnection: VoiceConnection,
+    voiceChannel: VoiceChannel | StageChannel
+  ) {
     this.voiceConnection = voiceConnection;
     this.audioPlayer = createAudioPlayer();
     this.songs = [];
@@ -34,7 +38,11 @@ export class QueueObject {
       } else if (newState.status === VoiceConnectionStatus.Destroyed) {
         // The connection has been destroyed
         this.stop();
-      } else if (!this.isConnecting && (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)) {
+      } else if (
+        !this.isConnecting &&
+        (newState.status === VoiceConnectionStatus.Connecting ||
+          newState.status === VoiceConnectionStatus.Signalling)
+      ) {
         /*
             In the Signalling or Connecting states, we set a 10 second time limit for the connection to become ready
             before destroying the voice connection. This stops the voice connection permanently existing in one of these
@@ -42,9 +50,16 @@ export class QueueObject {
         */
         this.isConnecting = true;
         try {
-          await entersState(this.voiceConnection, VoiceConnectionStatus.Ready, 10000);
+          await entersState(
+            this.voiceConnection,
+            VoiceConnectionStatus.Ready,
+            10000
+          );
         } catch {
-          if (this.voiceConnection.state.status !== VoiceConnectionStatus.Destroyed)
+          if (
+            this.voiceConnection.state.status !==
+            VoiceConnectionStatus.Destroyed
+          )
             this.voiceConnection.destroy();
         } finally {
           this.isConnecting = false;
@@ -56,7 +71,10 @@ export class QueueObject {
     // https://discordjs.github.io/voice/interfaces/audioplayerbufferingstate.html#resource
     // https://discordjs.github.io/voice/classes/audioresource.html#metadata
     this.audioPlayer.on('stateChange', (oldState, newState) => {
-      if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
+      if (
+        newState.status === AudioPlayerStatus.Idle &&
+        oldState.status !== AudioPlayerStatus.Idle
+      ) {
         // Previous state is non-idle => Has just finish playing
         // Non-idle AudioPlayerStatus has a property called `resource` which is the last resource played
         (oldState.resource as AudioResource<Track>).metadata.onFinish();
@@ -97,7 +115,11 @@ export class QueueObject {
    */
   private playNext() {
     // If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
-    if (this.isLocked || this.audioPlayer.state.status !== AudioPlayerStatus.Idle || this.songs.length === 0) {
+    if (
+      this.isLocked ||
+      this.audioPlayer.state.status !== AudioPlayerStatus.Idle ||
+      this.songs.length === 0
+    ) {
       return;
     }
     // Lock the queue
@@ -105,7 +127,7 @@ export class QueueObject {
 
     // Take the first item from the queue
     const nextTrack = this.songs.shift();
-    
+
     try {
       // Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
       const resource = nextTrack.createAudioResource();

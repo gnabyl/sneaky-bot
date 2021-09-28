@@ -1,11 +1,8 @@
-import {
-  joinVoiceChannel,
-} from '@discordjs/voice';
-
 import Container from 'typedi';
 import { InteractiveInteraction } from '@/model/interaction';
 import { QueueManager } from '@/utils/queue-manager';
 import { QueueObject } from '@/utils/queue-object';
+import { joinVoiceChannel } from '@discordjs/voice';
 
 const queueManager = Container.get(QueueManager);
 
@@ -14,7 +11,7 @@ export async function executeLeave(interaction: InteractiveInteraction) {
   await interaction.deferReply();
   if (queue) {
     queue.voiceConnection.destroy();
-    await interaction.editReply("Disconnected");
+    await interaction.editReply('Disconnected');
   } else {
     await interaction.editReply("I'm not connected");
   }
@@ -36,28 +33,34 @@ export async function executeJoin(interaction: InteractiveInteraction) {
   }
 
   if (!queue) {
-    queueManager.setQueue(guild.id, new QueueObject(
-      joinVoiceChannel({
-        channelId: userVoiceChannel.id,
-        guildId: userVoiceChannel.guild.id,
-        adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
-      }),
-      userVoiceChannel
-    ));
+    queueManager.setQueue(
+      guild.id,
+      new QueueObject(
+        joinVoiceChannel({
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+        }),
+        userVoiceChannel
+      )
+    );
   } else {
     const oldSongs = queue.songs;
-    queueManager.setQueue(guild.id, new QueueObject(
-      joinVoiceChannel({
-        channelId: userVoiceChannel.id,
-        guildId: userVoiceChannel.guild.id,
-        adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
-      }),
-      userVoiceChannel
-    ));
+    queueManager.setQueue(
+      guild.id,
+      new QueueObject(
+        joinVoiceChannel({
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+        }),
+        userVoiceChannel
+      )
+    );
     queueManager.getQueue(guild.id).songs = oldSongs;
   }
 
   await interaction.editReply({
-    content: `Connected`
+    content: `Connected`,
   });
 }

@@ -7,10 +7,10 @@ import { executeJoin, executeLeave } from '@/commands/connection';
 import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
 import { QueueManager } from './queue-manager';
-import { playAfterSearch } from '@/commands/play';
+import { Track } from './track';
 import { executeSearch } from '@/commands/search';
 import { executeSkip } from '@/commands/skip';
-import { Track } from './track';
+import { playAfterSearch } from '@/commands/play';
 
 @Service()
 export class Handlers {

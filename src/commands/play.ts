@@ -1,20 +1,22 @@
-
 import {
   VoiceConnectionStatus,
   entersState,
   joinVoiceChannel,
 } from '@discordjs/voice';
 
+import { Container } from 'typedi';
 import { GuildMember } from 'discord.js';
 import { InteractiveInteraction } from '@/model/interaction';
 import { QueueManager } from '@/utils/queue-manager';
-import { Container } from 'typedi';
 import { QueueObject } from '@/utils/queue-object';
 import { Track } from '@/utils/track';
 
-const TIMEOUT = parseInt(process.env.timeout);
+const TIMEOUT = Number(process.env.timeout);
 
-export async function playAfterSearch(interaction: InteractiveInteraction, track: Track) {
+export async function playAfterSearch(
+  interaction: InteractiveInteraction,
+  track: Track
+) {
   const guild = interaction.guild;
 
   const queueManager = Container.get(QueueManager);
@@ -26,7 +28,10 @@ export async function playAfterSearch(interaction: InteractiveInteraction, track
   // and the user is in a voice channel, join that channel
   // and create a queue.
   if (!queue) {
-    if (interaction.member instanceof GuildMember && interaction.member.voice.channel) {
+    if (
+      interaction.member instanceof GuildMember &&
+      interaction.member.voice.channel
+    ) {
       const userVoiceChannel = interaction.member.voice.channel;
       queue = new QueueObject(
         joinVoiceChannel({
@@ -43,16 +48,22 @@ export async function playAfterSearch(interaction: InteractiveInteraction, track
 
   // If still doesn't exist => User is not in a channel
   if (!queue) {
-    await interaction.editReply("You must be in a channel to play music!");
+    await interaction.editReply('You must be in a channel to play music!');
     return;
   }
 
   // Make sure the connection is ready before processing the user's request
   try {
-    await entersState(queue.voiceConnection, VoiceConnectionStatus.Ready, TIMEOUT);
+    await entersState(
+      queue.voiceConnection,
+      VoiceConnectionStatus.Ready,
+      TIMEOUT
+    );
   } catch (error) {
     console.warn(error);
-    await interaction.editReply(`Failed to join voice channel within ${TIMEOUT}ms, please try again later!`);
+    await interaction.editReply(
+      `Failed to join voice channel within ${TIMEOUT}ms, please try again later!`
+    );
     return;
   }
 

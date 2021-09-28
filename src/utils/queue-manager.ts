@@ -1,13 +1,13 @@
 import { ISongQueue } from '@/model/song-queue';
-import { Service } from 'typedi';
 import { QueueObject } from './queue-object';
+import { Service } from 'typedi';
 
 @Service()
 export class QueueManager {
   queues: ISongQueue;
 
   constructor() {
-    this.queues = new Map<string, QueueObject>();
+    this.queues = new ISongQueue();
   }
 
   setQueue(guildId: string, queue: QueueObject) {
