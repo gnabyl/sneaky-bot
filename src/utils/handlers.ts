@@ -54,24 +54,30 @@ export class Handlers {
 
       case Commands.SEARCH:
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
-          command: Commands.SEARCH,
+          command: commandName,
           results: await executeSearch(interaction),
         });
         break;
 
       case Commands.SKIP:
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
-          command: Commands.SKIP,
+          command: commandName,
           results: await executeSkip(interaction),
         });
         break;
 
       case Commands.LEAVE:
-        executeLeave(interaction);
+        this.lastCommand.set(interaction.guildId, interaction.user.id, {
+          command: commandName,
+          results: await executeLeave(interaction),
+        });
         break;
 
       case Commands.JOIN:
-        executeJoin(interaction);
+        this.lastCommand.set(interaction.guildId, interaction.user.id, {
+          command: commandName,
+          results: await executeJoin(interaction),
+        });
         break;
 
       default:
