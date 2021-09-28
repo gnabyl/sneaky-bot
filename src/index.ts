@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
+import * as path from 'path';
+
 import { Client, Intents, Interaction } from 'discord.js';
 
 import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
-
-import path = require('path');
 
 const setup = async () => {
   if (process.env.NODE_ENV) {
