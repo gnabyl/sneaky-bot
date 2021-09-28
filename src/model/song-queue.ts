@@ -1,3 +1,3 @@
-import { QueueObject } from "@/utils/queue-object";
+import { QueueObject } from '@/utils/queue-object';
 
 export type ISongQueue = Map<string, QueueObject>;

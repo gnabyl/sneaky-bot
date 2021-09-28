@@ -9,7 +9,10 @@ export async function executeSkip(interaction: CommandInteraction) {
 
   const queueManager = Container.get(QueueManager);
   const queue = queueManager.getQueue(interaction.guild.id);
-  const userVoiceChannel = (interaction.member instanceof GuildMember) ? (interaction.member.voice.channel) : null;
+  const userVoiceChannel =
+    interaction.member instanceof GuildMember
+      ? interaction.member.voice.channel
+      : null;
 
   // No voice channel
   if (!userVoiceChannel) {
@@ -20,7 +23,7 @@ export async function executeSkip(interaction: CommandInteraction) {
 
   // No queue
   if (!queue) {
-    await interaction.editReply("Empty queue!");
+    await interaction.editReply('Empty queue!');
     return;
   }
 
@@ -33,7 +36,7 @@ export async function executeSkip(interaction: CommandInteraction) {
   if (queue.audioPlayer.state.status === AudioPlayerStatus.Playing) {
     // Stop the player makes it become Idle, which will automatically play next song
     queue.audioPlayer.stop(true);
-    await interaction.editReply("Track skipped!");
+    await interaction.editReply('Track skipped!');
   } else {
     await interaction.editReply("I'm not playing anything!");
   }
