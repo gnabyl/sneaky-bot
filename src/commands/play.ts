@@ -24,14 +24,13 @@ export async function playAfterSearch(
 
   await interaction.deferReply();
 
-  // If a queue of the guild doesn't already exist
-  // and the user is in a voice channel, join that channel
-  // and create a queue.
-  if (!queue) {
-    if (
-      interaction.member instanceof GuildMember &&
-      interaction.member.voice.channel
-    ) {
+  // If user in a channel => create/restore queue
+  // Connect if needed
+  if (
+    interaction.member instanceof GuildMember &&
+    interaction.member.voice.channel
+  ) {
+    if (!queue) {
       const userVoiceChannel = interaction.member.voice.channel;
       queue = new QueueObject(
         joinVoiceChannel({
@@ -43,10 +42,26 @@ export async function playAfterSearch(
       );
       queue.voiceConnection.on('error', console.warn);
       queueManager.setQueue(interaction.guildId, queue);
+    } else if (
+      queue.voiceConnection.state.status !== VoiceConnectionStatus.Ready
+    ) {
+      const oldSongs = queue.songs;
+      const userVoiceChannel = interaction.member.voice.channel;
+      queue = new QueueObject(
+        joinVoiceChannel({
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+        }),
+        userVoiceChannel
+      );
+      queue.songs = oldSongs;
+      queue.voiceConnection.on('error', console.warn);
+      queueManager.setQueue(interaction.guildId, queue);
     }
   }
 
-  // If still doesn't exist => User is not in a channel
+  // If queue still doesn't exist => User is not in a channel
   if (!queue) {
     await interaction.editReply('You must be in a channel to play music!');
     return;
