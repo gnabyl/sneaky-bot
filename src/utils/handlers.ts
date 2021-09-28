@@ -6,19 +6,20 @@ import { executeJoin, executeLeave } from '@/commands/connection';
 
 import { Commands } from '@/model/last-commands';
 import { LastCommand } from './last-command';
-import { SongQueue } from './song-queue';
-import { executePlay } from '@/commands/play';
+import { QueueManager } from './queue-manager';
+import { playAfterSearch } from '@/commands/play';
 import { executeSearch } from '@/commands/search';
 import { executeSkip } from '@/commands/skip';
+import { Track } from './track';
 
 @Service()
 export class Handlers {
   lastCommand: LastCommand;
-  queue: SongQueue;
+  queue: QueueManager;
 
   constructor() {
     this.lastCommand = Container.get(LastCommand);
-    this.queue = Container.get(SongQueue);
+    this.queue = Container.get(QueueManager);
   }
 
   public async handleCommand(interaction: CommandInteraction) {
@@ -53,24 +54,30 @@ export class Handlers {
 
       case Commands.SEARCH:
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
-          command: Commands.SEARCH,
+          command: commandName,
           results: await executeSearch(interaction),
         });
         break;
 
       case Commands.SKIP:
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
-          command: Commands.SKIP,
-          results: await executeSkip(interaction, this.queue),
+          command: commandName,
+          results: await executeSkip(interaction),
         });
         break;
 
       case Commands.LEAVE:
-        executeLeave(interaction);
+        this.lastCommand.set(interaction.guildId, interaction.user.id, {
+          command: commandName,
+          results: await executeLeave(interaction),
+        });
         break;
 
       case Commands.JOIN:
-        executeJoin(interaction);
+        this.lastCommand.set(interaction.guildId, interaction.user.id, {
+          command: commandName,
+          results: await executeJoin(interaction),
+        });
         break;
 
       default:
@@ -101,8 +108,8 @@ export class Handlers {
     }
   }
 
-  private handleSearchButton(interaction: ButtonInteraction, results) {
+  private handleSearchButton(interaction: ButtonInteraction, results: Track[]) {
     const songIndex = +interaction.customId;
-    executePlay(interaction, this.queue, results[songIndex]);
+    playAfterSearch(interaction, results[songIndex]);
   }
 }

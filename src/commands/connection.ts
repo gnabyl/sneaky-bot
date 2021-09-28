@@ -1,69 +1,67 @@
-import {
-  VoiceConnectionStatus,
-  createAudioPlayer,
-  getVoiceConnection,
-  joinVoiceChannel,
-} from '@discordjs/voice';
+import { joinVoiceChannel } from '@discordjs/voice';
 
 import Container from 'typedi';
 import { InteractiveInteraction } from '@/model/interaction';
-import { SongQueue } from '@/utils/song-queue';
+import { QueueManager } from '@/utils/queue-manager';
+import { QueueObject } from '@/utils/queue-object';
 
-const queue = Container.get(SongQueue);
+const queueManager = Container.get(QueueManager);
 
-export function executeLeave(interaction: InteractiveInteraction) {
-  try {
-    getVoiceConnection(interaction.guildId).disconnect();
-    interaction.reply({
-      content: `Disconnected`,
-      ephemeral: false,
-    });
-  } catch (err) {
-    interaction.reply({
-      content: `I'm not connected`,
-      ephemeral: false,
-    });
+export async function executeLeave(interaction: InteractiveInteraction) {
+  const queue = queueManager.getQueue(interaction.guild.id);
+  await interaction.deferReply();
+  if (queue) {
+    queue.voiceConnection.destroy();
+    await interaction.editReply('Disconnected');
+  } else {
+    await interaction.editReply("I'm not connected");
   }
 }
 
-export function executeJoin(interaction: InteractiveInteraction) {
+export async function executeJoin(interaction: InteractiveInteraction) {
   const guild = interaction.guild;
   const member = guild.members.cache.get(interaction.member.user.id);
-  const voiceChannel = member.voice.channel;
+  const userVoiceChannel = member.voice.channel;
+  const queue = queueManager.getQueue(guild.id);
 
-  if (!voiceChannel) {
-    return interaction.channel.send(
+  await interaction.deferReply();
+
+  if (!userVoiceChannel) {
+    await interaction.editReply(
       'You must be in a voice channel to play music!'
     );
+    return;
   }
 
-  if (!queue.getQueue(guild.id)) {
-    const queueObject = {
-      textChannel: interaction.channel,
-      voiceChannel,
-      connection: null,
-      player: createAudioPlayer(),
-      songs: [],
-      playing: true,
-    };
-    queue.setQueue(guild.id, queueObject);
+  if (!queue) {
+    queueManager.setQueue(
+      guild.id,
+      new QueueObject(
+        joinVoiceChannel({
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+        }),
+        userVoiceChannel
+      )
+    );
+  } else {
+    const oldSongs = queue.songs;
+    queueManager.setQueue(
+      guild.id,
+      new QueueObject(
+        joinVoiceChannel({
+          channelId: userVoiceChannel.id,
+          guildId: userVoiceChannel.guild.id,
+          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+        }),
+        userVoiceChannel
+      )
+    );
+    queueManager.getQueue(guild.id).songs = oldSongs;
   }
 
-  queue.getQueue(guild.id).connection = joinVoiceChannel({
-    channelId: voiceChannel.id,
-    guildId: guild.id,
-    adapterCreator: guild.voiceAdapterCreator,
-  });
-
-  queue
-    .getQueue(guild.id)
-    .connection.on(VoiceConnectionStatus.Disconnected, () => {
-      console.log('Bot disconnected');
-      queue.getQueue(guild.id).connection.destroy();
-    });
-
-  interaction.reply({
+  await interaction.editReply({
     content: `Connected`,
-    ephemeral: false,
   });
 }
