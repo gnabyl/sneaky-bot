@@ -28,7 +28,7 @@ export async function executePlay(interaction: CommandInteraction) {
 
   await interaction.deferReply();
 
-  const input = interaction.options.getString('song');
+  const input = interaction.options.getString('input');
   const searchResult = await SearchManager.search(input);
 
   const track = new Track({
