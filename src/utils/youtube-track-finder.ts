@@ -1,6 +1,6 @@
 import { isURL, TrackFinder } from '@/model/track-finder';
-import * as ytdl from 'ytdl-core';
 import { search } from 'yt-search';
+import * as ytdl from 'ytdl-core';
 import { Track } from './track';
 
 export class YoutubeTrackFinder implements TrackFinder {

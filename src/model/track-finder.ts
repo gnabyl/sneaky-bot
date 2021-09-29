@@ -1,5 +1,4 @@
 import { Track } from '@/utils/track';
-import { InteractiveInteraction } from './interaction';
 
 // Copied from google
 export function isURL(str: string): boolean {
