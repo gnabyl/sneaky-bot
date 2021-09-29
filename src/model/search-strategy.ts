@@ -14,7 +14,7 @@ export function isURL(str: string): boolean {
   return pattern.test(str);
 }
 
-export interface TrackFinder {
+export interface SearchStrategy {
   canGet(input: string): boolean;
   getTrack(input: string): Promise<Track>;
 }

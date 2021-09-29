@@ -1,9 +1,9 @@
-import { isURL, TrackFinder } from '@/model/track-finder';
+import { isURL, SearchStrategy } from '@/model/search-strategy';
 import { search } from 'yt-search';
 import * as ytdl from 'ytdl-core';
 import { Track } from './track';
 
-export class YoutubeTrackFinder implements TrackFinder {
+export class YoutubeSearchStrategy implements SearchStrategy {
   canGet(input: string): boolean {
     if (!isURL(input)) {
       return true;
