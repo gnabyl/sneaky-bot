@@ -2,10 +2,9 @@ import { Track } from '@/utils/track';
 import {
   CommandInteraction,
   MessageActionRow,
-  MessageButton
+  MessageButton,
 } from 'discord.js';
 import { search as yts, VideoSearchResult } from 'yt-search';
-
 
 async function buildSearchResultResponse(res: Track[]) {
   let response = `Here are ${res.length} results:`;

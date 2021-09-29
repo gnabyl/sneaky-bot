@@ -20,6 +20,9 @@ export async function playAfterSearch(
   }
 }
 
+/**
+ * This function is used to play a song by name/url
+ */
 export async function executePlay(interaction: CommandInteraction) {
   const queueManager = Container.get(QueueManager);
 

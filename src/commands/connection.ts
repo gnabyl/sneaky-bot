@@ -4,11 +4,10 @@ import { QueueObject } from '@/utils/queue-object';
 import {
   entersState,
   joinVoiceChannel,
-  VoiceConnectionStatus
+  VoiceConnectionStatus,
 } from '@discordjs/voice';
 import { GuildMember } from 'discord.js';
 import Container from 'typedi';
-
 
 const queueManager = Container.get(QueueManager);
 const TIMEOUT = Number(process.env.timeout);
