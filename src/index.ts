@@ -1,6 +1,5 @@
-import 'reflect-metadata';
-
 import { Client, Intents, Interaction } from 'discord.js';
+import 'reflect-metadata';
 import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
