@@ -11,22 +11,27 @@ export class YoutubeSearchStrategy implements SearchStrategy {
     return ytdl.validateURL(input);
   }
   async getTrack(input: string): Promise<Track> {
-    if (!isURL(input)) {
-      const searchResult = (await search(input)).videos[0];
-      return new Track({
-        url: searchResult.url,
-        title: searchResult.title,
-        author: searchResult.author.name,
-        duration: searchResult.timestamp,
-      });
-    } else {
-      const searchResult = (await ytdl.getBasicInfo(input)).videoDetails;
-      return new Track({
-        url: searchResult.video_url,
-        title: searchResult.title,
-        author: searchResult.author.name,
-        duration: searchResult.lengthSeconds,
-      });
+    try {
+      if (!isURL(input)) {
+        const searchResult = (await search(input)).videos[0];
+        return new Track({
+          url: searchResult.url,
+          title: searchResult.title,
+          author: searchResult.author.name,
+          duration: searchResult.timestamp,
+        });
+      } else {
+        const searchResult = (await ytdl.getBasicInfo(input)).videoDetails;
+        return new Track({
+          url: searchResult.video_url,
+          title: searchResult.title,
+          author: searchResult.author.name,
+          duration: searchResult.lengthSeconds,
+        });
+      }
+    } catch (err) {
+      console.error(`[YT-STY] ${err}`);
+      return null;
     }
   }
 }
