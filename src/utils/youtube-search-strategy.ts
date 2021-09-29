@@ -3,6 +3,9 @@ import { search } from 'yt-search';
 import * as ytdl from 'ytdl-core';
 import { Track } from './track';
 
+/**
+ * Search Strategy for youtube videos/tracks
+ */
 export class YoutubeSearchStrategy implements SearchStrategy {
   canGet(input: string): boolean {
     if (!isURL(input)) {

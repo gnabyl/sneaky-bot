@@ -17,7 +17,7 @@ export class LastCommand {
     }
 
     this.lastCommand[guildId][userId] = commandObject;
-  }
+  };
 
   get = (guildId, userId) => {
     if (!this.lastCommand[guildId]) {
@@ -32,5 +32,5 @@ export class LastCommand {
     }
 
     return this.lastCommand[guildId][userId];
-  }
+  };
 }

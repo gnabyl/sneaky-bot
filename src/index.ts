@@ -4,7 +4,6 @@ import Container from 'typedi';
 import { DiscordBot } from './utils/client';
 import { Handlers } from './utils/handlers';
 
-
 // Create a new client
 const client = new Client({
   intents: [

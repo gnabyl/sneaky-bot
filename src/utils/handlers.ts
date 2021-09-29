@@ -10,8 +10,6 @@ import { LastCommand } from './last-command';
 import { QueueManager } from './queue-manager';
 import { Track } from './track';
 
-
-
 @Service()
 export class Handlers {
   lastCommand: LastCommand;

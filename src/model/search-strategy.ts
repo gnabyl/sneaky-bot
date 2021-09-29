@@ -1,6 +1,10 @@
 import { Track } from '@/utils/track';
 
-// Copied from google
+/**
+ * Check if a given string is a valid URL
+ * @param str string to check
+ * @returns true if valid url
+ */
 export function isURL(str: string): boolean {
   const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
@@ -14,7 +18,20 @@ export function isURL(str: string): boolean {
   return pattern.test(str);
 }
 
+/**
+ * Search Strategy base interface
+ */
 export interface SearchStrategy {
+  /**
+   * Check if an input (url, song name) can be parsed by this strategy
+   * @param input input string to check
+   * @returns true if this input can be parsed by this strategy
+   */
   canGet(input: string): boolean;
+  /**
+   * Create a track from input
+   * @param input string to parse
+   * @returns Track
+   */
   getTrack(input: string): Promise<Track>;
 }

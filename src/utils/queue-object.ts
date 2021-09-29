@@ -5,7 +5,7 @@ import {
   createAudioPlayer,
   entersState,
   VoiceConnection,
-  VoiceConnectionStatus
+  VoiceConnectionStatus,
 } from '@discordjs/voice';
 import { StageChannel, VoiceChannel } from 'discord.js';
 import { Track } from './track';
