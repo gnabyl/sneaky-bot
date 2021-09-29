@@ -1,9 +1,9 @@
+import { connect } from '@/commands/connection';
 import { InteractiveInteraction } from '@/model/interaction';
 import { QueueManager } from '@/utils/queue-manager';
-import { Container } from 'typedi';
 import { Track } from '@/utils/track';
-import { connect } from '@/commands/connection';
 import { CommandInteraction } from 'discord.js';
+import { Container } from 'typedi';
 import { search as yts } from 'yt-search';
 
 export async function playAfterSearch(
@@ -20,6 +20,9 @@ export async function playAfterSearch(
   }
 }
 
+/**
+ * This function is used to play a song by name/url
+ */
 export async function executePlay(interaction: CommandInteraction) {
   const queueManager = Container.get(QueueManager);
 
