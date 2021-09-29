@@ -1,6 +1,6 @@
-import { CommandInteraction, GuildMember } from 'discord.js';
 import { QueueManager } from '@/utils/queue-manager';
 import { AudioPlayerStatus } from '@discordjs/voice';
+import { CommandInteraction, GuildMember } from 'discord.js';
 import Container from 'typedi';
 
 export async function executeSkip(interaction: CommandInteraction) {

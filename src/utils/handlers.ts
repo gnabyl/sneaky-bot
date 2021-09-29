@@ -1,15 +1,13 @@
-import * as math from 'mathjs';
-
-import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
-import Container, { Service } from 'typedi';
 import { executeJoin, executeLeave } from '@/commands/connection';
-
-import { Commands } from '@/model/last-commands';
-import { LastCommand } from './last-command';
-import { QueueManager } from './queue-manager';
-import { playAfterSearch } from '@/commands/play';
+import { executePlay, playAfterSearch } from '@/commands/play';
 import { executeSearch } from '@/commands/search';
 import { executeSkip } from '@/commands/skip';
+import { Commands } from '@/model/last-commands';
+import { ButtonInteraction, CommandInteraction, Message } from 'discord.js';
+import * as math from 'mathjs';
+import Container, { Service } from 'typedi';
+import { LastCommand } from './last-command';
+import { QueueManager } from './queue-manager';
 import { Track } from './track';
 
 @Service()
@@ -56,6 +54,13 @@ export class Handlers {
         this.lastCommand.set(interaction.guildId, interaction.user.id, {
           command: commandName,
           results: await executeSearch(interaction),
+        });
+        break;
+
+      case Commands.PLAY:
+        this.lastCommand.set(interaction.guildId, interaction.user.id, {
+          command: commandName,
+          results: await executePlay(interaction),
         });
         break;
 

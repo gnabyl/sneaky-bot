@@ -1,14 +1,13 @@
+import { InteractiveInteraction } from '@/model/interaction';
+import { QueueManager } from '@/utils/queue-manager';
+import { QueueObject } from '@/utils/queue-object';
 import {
   entersState,
   joinVoiceChannel,
   VoiceConnectionStatus,
 } from '@discordjs/voice';
-
-import Container from 'typedi';
-import { InteractiveInteraction } from '@/model/interaction';
-import { QueueManager } from '@/utils/queue-manager';
-import { QueueObject } from '@/utils/queue-object';
 import { GuildMember } from 'discord.js';
+import Container from 'typedi';
 
 const queueManager = Container.get(QueueManager);
 const TIMEOUT = Number(process.env.timeout);

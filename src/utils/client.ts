@@ -1,5 +1,4 @@
 import { Client, Interaction, Message } from 'discord.js';
-
 import { Service } from 'typedi';
 import { v4 } from 'uuid';
 
