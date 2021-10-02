@@ -6,7 +6,7 @@ export interface TrackData {
   author: string;
   url: string;
   duration: string;
-  onStart: () => void;
-  onFinish: () => void;
-  onError: (error: Error) => void;
+  onStart?: () => void;
+  onFinish?: () => void;
+  onError?: (error: Error) => void;
 }

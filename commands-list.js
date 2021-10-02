@@ -39,8 +39,8 @@ exports.commandsList = [
     description: 'Play song by name/url',
     options: [
       {
-        name: 'song',
-        description: 'Name of the song',
+        name: 'input',
+        description: 'Url or song name',
         required: true,
         type: Constants.ApplicationCommandOptionTypes.STRING,
       },

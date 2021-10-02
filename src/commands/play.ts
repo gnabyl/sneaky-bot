@@ -1,10 +1,10 @@
 import { connect } from '@/commands/connection';
 import { InteractiveInteraction } from '@/model/interaction';
+import { SearchManager } from '@/model/search-manager';
 import { QueueManager } from '@/utils/queue-manager';
 import { Track } from '@/utils/track';
 import { CommandInteraction } from 'discord.js';
 import { Container } from 'typedi';
-import { search as yts } from 'yt-search';
 
 export async function playAfterSearch(
   interaction: InteractiveInteraction,
@@ -28,25 +28,23 @@ export async function executePlay(interaction: CommandInteraction) {
 
   await interaction.deferReply();
 
-  const songName = interaction.options.getString('song');
+  const input = interaction.options.getString('input');
+  const searchResult = await SearchManager.search(input);
 
-  const searchResult = await yts(songName);
-
-  const video = searchResult.videos[0];
   const track = new Track({
-    url: video.url,
-    title: video.title,
-    author: video.title,
-    duration: video.timestamp,
+    url: searchResult.url,
+    title: searchResult.title,
+    author: searchResult.title,
+    duration: searchResult.duration,
     onStart: () => {
-      interaction.channel.send(`Now playing ${video.title}!`);
+      interaction.channel.send(`Now playing ${searchResult.title}!`);
     },
     onFinish: () => {
-      interaction.channel.send(`Finished ${video.title}!`);
+      interaction.channel.send(`Finished ${searchResult.title}!`);
     },
     onError: (err) => {
       interaction.channel.send(
-        `Error occurred while playing ${video.title} :(`
+        `Error occurred while playing ${searchResult.title} :(`
       );
       console.error(err);
     },
