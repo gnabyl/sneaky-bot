@@ -1,6 +1,7 @@
 import { InteractiveInteraction } from '@/model/interaction';
 import { QueueManager } from '@/utils/queue-manager';
 import { QueueObject } from '@/utils/queue-object';
+import { Track } from '@/utils/track';
 import {
   entersState,
   joinVoiceChannel,
@@ -46,35 +47,25 @@ export async function connect(
     interaction.member instanceof GuildMember &&
     interaction.member.voice.channel
   ) {
-    if (!queue) {
-      const userVoiceChannel = interaction.member.voice.channel;
-      queue = new QueueObject(
-        joinVoiceChannel({
-          channelId: userVoiceChannel.id,
-          guildId: userVoiceChannel.guild.id,
-          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
-        }),
-        userVoiceChannel
-      );
-      queue.voiceConnection.on('error', console.warn);
-      queueManager.setQueue(interaction.guildId, queue);
-    } else if (
-      queue.voiceConnection.state.status !== VoiceConnectionStatus.Ready
-    ) {
-      const oldSongs = queue.songs;
-      const userVoiceChannel = interaction.member.voice.channel;
-      queue = new QueueObject(
-        joinVoiceChannel({
-          channelId: userVoiceChannel.id,
-          guildId: userVoiceChannel.guild.id,
-          adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
-        }),
-        userVoiceChannel
-      );
-      queue.songs = oldSongs;
-      queue.voiceConnection.on('error', console.warn);
-      queueManager.setQueue(interaction.guildId, queue);
+    const userVoiceChannel = interaction.member.voice.channel;
+    let oldSongs: Track[] = [];
+    if (queue) {
+      if (queue.voiceChannel.id === userVoiceChannel.id) {
+        return true;
+      }
+      oldSongs = queue.songs;
     }
+    queue = new QueueObject(
+      joinVoiceChannel({
+        channelId: userVoiceChannel.id,
+        guildId: userVoiceChannel.guild.id,
+        adapterCreator: userVoiceChannel.guild.voiceAdapterCreator,
+      }),
+      userVoiceChannel
+    );
+    queue.songs = oldSongs;
+    queue.voiceConnection.on('error', console.warn);
+    queueManager.setQueue(interaction.guildId, queue);
   } else {
     await interaction.editReply(
       'You must be in a voice channel to use music command!'
